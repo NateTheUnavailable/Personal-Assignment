@@ -2,6 +2,10 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const errorHandler = require('./middleware/errorMiddleware');
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const connectDB = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
@@ -15,8 +19,11 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+
 // Routes
 app.use('/products', productRoutes);
+app.use(errorHandler);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Home Route
 app.get('/', (req, res) => {
