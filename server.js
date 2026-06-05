@@ -12,6 +12,12 @@ const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
+const passport = require('passport');
+require('./config/passport');
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/auth', authRoutes);
+
 // Connect Database
 connectDB();
 
@@ -35,3 +41,14 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.use(
+  require('express-session')({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());

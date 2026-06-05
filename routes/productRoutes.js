@@ -1,3 +1,5 @@
+const auth = require('../middleware/authMiddleware');
+const admin = require('../middleware/adminMiddleware');
 const express = require('express');
 const router = express.Router();
 const validate = require('../middleware/validateMiddleware');
@@ -95,7 +97,8 @@ router.get('/:id', getProduct);
  *       201:
  *         description: Product created
  */
-router.post('/', productValidationRules, validate, createProduct);
+// Admin and User only
+router.post('/', productValidationRules, auth, admin, validate, createProduct);
 
 
 
@@ -115,7 +118,8 @@ router.post('/', productValidationRules, validate, createProduct);
  *       200:
  *         description: Product updated
  */
-router.put('/:id', productValidationRules, validate, updateProduct);
+// Admin and User only
+router.put('/:id', productValidationRules, auth, admin, validate, updateProduct);
 
 /**
  * @swagger
@@ -133,6 +137,7 @@ router.put('/:id', productValidationRules, validate, updateProduct);
  *       200:
  *         description: Product deleted
  */
-router.delete('/:id', deleteProduct);
+// Admin only
+router.delete('/:id', auth, admin, deleteProduct);
 
 module.exports = router;
